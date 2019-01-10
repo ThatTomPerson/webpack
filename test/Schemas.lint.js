@@ -2,7 +2,6 @@
 
 const fs = require("fs");
 const path = require("path");
-require("should");
 const glob = require("glob");
 const rootDir = path.resolve(__dirname, "..");
 
@@ -20,32 +19,27 @@ describe("Schemas", () => {
 			try {
 				fileContent = fs.readFileSync(path.resolve(rootDir, filename), "utf-8");
 				content = JSON.parse(fileContent);
-			} catch(e) {
+			} catch (e) {
 				errorWhileParsing = e;
 			}
 
 			it("should be parse-able", () => {
-				if(errorWhileParsing) throw errorWhileParsing;
+				if (errorWhileParsing) throw errorWhileParsing;
 			});
 
-			if(content) {
-
-				it("should be formated correctly", () => {
-					fileContent.replace(/\r\n?/g, "\n").should.be.eql(JSON.stringify(content, 0, 2) + "\n");
-				});
-
+			if (content) {
 				const arrayProperties = ["oneOf", "anyOf", "allOf"];
 				const allowedProperties = [
 					"definitions",
 					"$ref",
-					"id",
+					"$id",
+					"title",
 					"items",
 					"properties",
 					"additionalProperties",
 					"type",
 					"oneOf",
 					"anyOf",
-					"allOf",
 					"absolutePath",
 					"description",
 					"enum",
@@ -55,59 +49,100 @@ describe("Schemas", () => {
 					"uniqueItems",
 					"minItems",
 					"minProperties",
-					"instanceof"
+					"instanceof",
+					"tsType"
 				];
 
 				const validateProperty = property => {
 					it("should have description set", () => {
-						property.should.be.property("description").be.type("string");
-						property.description.length.should.be.above(1);
+						expect(typeof property.description).toBe("string");
+						expect(property.description.length).toBeGreaterThan(1);
 					});
 				};
 
 				const walker = item => {
 					it("should only use allowed schema properties", () => {
-						const otherProperties = Object.keys(item).filter(p => allowedProperties.indexOf(p) < 0);
-						if(otherProperties.length > 0) {
-							throw new Error(`The properties ${otherProperties.join(", ")} are not allowed to use`);
+						const otherProperties = Object.keys(item).filter(
+							p => allowedProperties.indexOf(p) < 0
+						);
+						if (otherProperties.length > 0) {
+							throw new Error(
+								`The properties ${otherProperties.join(
+									", "
+								)} are not allowed to use`
+							);
 							// When allowing more properties make sure to add nice error messages for them in WebpackOptionsValidationError
 						}
 					});
 
-					if(Object.keys(item).indexOf("$ref") >= 0) {
+					if ("$ref" in item) {
 						it("should not have other properties next to $ref", () => {
-							const otherProperties = Object.keys(item).filter(p => p !== "$ref");
-							if(otherProperties.length > 0) {
-								throw new Error(`When using $ref not other properties are possible (${otherProperties.join(", ")})`);
+							const otherProperties = Object.keys(item).filter(
+								p => p !== "$ref"
+							);
+							if (otherProperties.length > 0) {
+								throw new Error(
+									`When using $ref not other properties are possible (${otherProperties.join(
+										", "
+									)})`
+								);
+							}
+						});
+					}
+
+					if ("instanceof" in item) {
+						it("should have tsType specified when using instanceof", () => {
+							if (!("tsType" in item)) {
+								throw new Error("When using instanceof, tsType is required");
+							}
+						});
+					}
+
+					if ("absolutePath" in item) {
+						it("should have type: 'string' specified when using absolutePath", () => {
+							if (item.type !== "string") {
+								throw new Error(
+									"When using absolutePath, type must be 'string'"
+								);
+							}
+						});
+					}
+
+					if ("properties" in item || "additionalProperties" in item) {
+						it("should have type: 'object' specified when using properties or additionalProperties", () => {
+							if (item.type !== "object") {
+								throw new Error(
+									"When using properties or additionalProperties, type must be 'object'"
+								);
 							}
 						});
 					}
 
 					arrayProperties.forEach(prop => {
-						if(prop in item) {
+						if (prop in item) {
 							describe(prop, () => {
 								item[prop].forEach(walker);
 							});
 						}
 					});
-					if("items" in item) {
+					if ("items" in item) {
 						describe("items", () => {
-							if(Object.keys(item).join() !== "$ref") {
+							if (Object.keys(item).join() !== "$ref") {
 								validateProperty(item.items);
 							}
 							walker(item.items);
 						});
 					}
-					if("definitions" in item) {
+					if ("definitions" in item) {
 						Object.keys(item.definitions).forEach(name => {
 							describe(`#${name}`, () => {
 								walker(item.definitions[name]);
 							});
 						});
 					}
-					if("properties" in item) {
-						it("should have additionalProperties set to some value when descriping properties", () => {
-							item.should.be.property("additionalProperties");
+					if ("properties" in item) {
+						it("should have additionalProperties set to some value when describing properties", () => {
+							expect(item.additionalProperties).toBeDefined();
 						});
 						Object.keys(item.properties).forEach(name => {
 							describe(`> '${name}'`, () => {
@@ -117,7 +152,7 @@ describe("Schemas", () => {
 							});
 						});
 					}
-					if(typeof item.additionalProperties === "object") {
+					if (typeof item.additionalProperties === "object") {
 						describe("properties", () => {
 							validateProperty(item.additionalProperties);
 							walker(item.additionalProperties);

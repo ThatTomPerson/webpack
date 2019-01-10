@@ -1,5 +1,5 @@
 {
-  "id": "LoaderOptionsPlugin",
+  "title": "LoaderOptionsPluginOptions",
   "type": "object",
   "additionalProperties": true,
   "properties": {

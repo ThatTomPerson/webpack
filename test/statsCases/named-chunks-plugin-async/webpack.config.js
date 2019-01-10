@@ -1,28 +1,37 @@
 "use strict";
 
-const NamedChunksPlugin = require("../../../lib/NamedChunksPlugin");
+const webpack = require("../../../");
 const RequestShortener = require("../../../lib/RequestShortener");
+const { compareModulesById } = require("../../../lib/util/comparators");
 
 module.exports = {
 	mode: "production",
+	optimization: { chunkIds: false },
 	entry: {
-		"entry": "./entry",
+		entry: "./entry"
 	},
 	plugins: [
-		new NamedChunksPlugin(function(chunk) {
-			if(chunk.name) {
+		new webpack.ids.NamedChunkIdsPlugin((chunk, { chunkGraph }) => {
+			if (chunk.name) {
 				return chunk.name;
 			}
-			const chunkModulesToName = (chunk) => Array.from(chunk.modulesIterable, (mod) => {
-				const rs = new RequestShortener(mod.context);
-				return rs.shorten(mod.request).replace(/[./\\]/g, "_");
-			}).join("-");
+			const chunkModulesToName = chunk =>
+				Array.from(
+					chunkGraph.getOrderedChunkModulesIterable(
+						chunk,
+						compareModulesById(chunkGraph)
+					),
+					mod => {
+						const rs = new RequestShortener(mod.context);
+						return rs.shorten(mod.request).replace(/[./\\]/g, "_");
+					}
+				).join("-");
 
-			if(chunk.getNumberOfModules() > 0) {
+			if (chunkGraph.getNumberOfChunkModules(chunk) > 0) {
 				return `chunk-containing-${chunkModulesToName(chunk)}`;
 			}
 
 			return null;
-		}),
+		})
 	]
 };

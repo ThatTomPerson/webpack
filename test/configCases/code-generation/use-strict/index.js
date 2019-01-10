@@ -15,9 +15,13 @@ it("should include only one use strict per module", function() {
 		match = regExp.exec(source);
 	}
 
-	matches.should.be.eql([
-		"__webpack_require__.r(__webpack_exports__);",
+	matches.sort();
+
+	expect(matches).toEqual([
 		"/* unused harmony default export */ var _unused_webpack_default_export = (\"a\");",
+		"/******/ ",
+		"/******/ \t// The module cache",
+		"__webpack_require__.r(__webpack_exports__);",
 		"__webpack_require__.r(__webpack_exports__);",
 		"__webpack_require__.r(__webpack_exports__);",
 		"__webpack_require__.r(__webpack_exports__);",

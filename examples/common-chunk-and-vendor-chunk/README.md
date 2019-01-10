@@ -44,17 +44,20 @@ module.exports = {
 		pageC: "./pageC"
 	},
 	optimization: {
+		chunkIds: "named",
 		splitChunks: {
 			cacheGroups: {
 				commons: {
 					chunks: "initial",
 					minChunks: 2,
+					maxInitialRequests: 5, // The default limit is too small to showcase the effect
 					minSize: 0 // This is example is too small to create commons chunks
 				},
 				vendor: {
 					test: /node_modules/,
 					chunks: "initial",
 					name: "vendor",
+					priority: 10,
 					enforce: true
 				}
 			}
@@ -70,14 +73,15 @@ module.exports = {
 # dist/vendor.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[5],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["vendor"],{
 
 /***/ 1:
 /*!*********************************!*\
   !*** ./node_modules/vendor1.js ***!
   \*********************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/*! runtime requirements: module */
+/***/ (function(module) {
 
 module.exports = "vendor1";
 
@@ -88,7 +92,8 @@ module.exports = "vendor1";
   !*** ./node_modules/vendor2.js ***!
   \*********************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/*! runtime requirements: module */
+/***/ (function(module) {
 
 module.exports = "vendor2";
 
@@ -97,17 +102,18 @@ module.exports = "vendor2";
 }]);
 ```
 
-# dist/commons~pageA~pageB~pageC.js
+# dist/commons-utility2_js.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["commons-utility2_js"],{
 
 /***/ 3:
 /*!*********************!*\
   !*** ./utility2.js ***!
   \*********************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/*! runtime requirements: module */
+/***/ (function(module) {
 
 module.exports = "utility2";
 
@@ -116,17 +122,18 @@ module.exports = "utility2";
 }]);
 ```
 
-# dist/commons~pageB~pageC.js
+# dist/commons-utility3_js.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[4],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["commons-utility3_js"],{
 
 /***/ 6:
 /*!*********************!*\
   !*** ./utility3.js ***!
   \*********************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/*! runtime requirements: module */
+/***/ (function(module) {
 
 module.exports = "utility3";
 
@@ -140,64 +147,10 @@ module.exports = "utility3";
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
 ``` javascript
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// install a JSONP callback for chunk loading
-/******/ 	function webpackJsonpCallback(data) {
-/******/ 		var chunkIds = data[0];
-/******/ 		var moreModules = data[1]
-/******/ 		var executeModules = data[2];
-/******/ 		// add "moreModules" to the modules object,
-/******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [];
-/******/ 		for(;i < chunkIds.length; i++) {
-/******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
-/******/ 				resolves.push(installedChunks[chunkId][0]);
-/******/ 			}
-/******/ 			installedChunks[chunkId] = 0;
-/******/ 		}
-/******/ 		for(moduleId in moreModules) {
-/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
-/******/ 				modules[moduleId] = moreModules[moduleId];
-/******/ 			}
-/******/ 		}
-/******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
-/******/ 		while(resolves.length) {
-/******/ 			resolves.shift()();
-/******/ 		}
-/******/
-/******/ 		// add entry modules from loaded chunk to deferred list
-/******/ 		deferredModules.push.apply(deferredModules, executeModules || []);
-/******/
-/******/ 		// run deferred modules when all chunks ready
-/******/ 		return checkDeferredModules();
-/******/ 	};
-/******/ 	function checkDeferredModules() {
-/******/ 		var result;
-/******/ 		for(var i = 0; i < deferredModules.length; i++) {
-/******/ 			var deferredModule = deferredModules[i];
-/******/ 			var fullfilled = true;
-/******/ 			for(var j = 1; j < deferredModule.length; j++) {
-/******/ 				var depId = deferredModule[j];
-/******/ 				if(installedChunks[depId] !== 0) fullfilled = false;
-/******/ 			}
-/******/ 			if(fullfilled) {
-/******/ 				deferredModules.splice(i--, 1);
-/******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
-/******/ 			}
-/******/ 		}
-/******/ 		return result;
-/******/ 	}
-/******/
+/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
-/******/ 	// object to store loaded and loading chunks
-/******/ 	var installedChunks = {
-/******/ 		0: 0
-/******/ 	};
-/******/
-/******/ 	var deferredModules = [];
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -227,52 +180,11 @@ module.exports = "utility3";
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
 /******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
+/******/ 	// initialize runtime
+/******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "dist/";
-/******/
-/******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
-/******/ 	jsonpArray.push = webpackJsonpCallback;
-/******/ 	jsonpArray = jsonpArray.slice();
-/******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
-/******/ 	var parentJsonpFunction = oldJsonpFunction;
-/******/
-/******/
-/******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([0,3,5]);
-/******/ 	// run deferred modules when ready
-/******/ 	return checkDeferredModules();
+/******/ 	// run modules when ready
+/******/ 	return __webpack_require__.x();
 /******/ })
 /************************************************************************/
 ```
@@ -286,7 +198,8 @@ module.exports = "utility3";
   !*** ./pageA.js ***!
   \******************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! runtime requirements: __webpack_require__, module */
+/***/ (function(module, __unusedexports, __webpack_require__) {
 
 var vendor1 = __webpack_require__(/*! vendor1 */ 1);
 var utility1 = __webpack_require__(/*! ./utility1 */ 2);
@@ -302,75 +215,123 @@ module.exports = "pageA";
   !*** ./utility1.js ***!
   \*********************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/*! runtime requirements: module */
+/***/ (function(module) {
 
 module.exports = "utility1";
 
 /***/ })
-/******/ ]);
+/******/ ],
 ```
+
+<details><summary><code>function(__webpack_require__) { /* webpackRuntimeModules */ });</code></summary>
+
+``` js
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ 	"use strict";
+/******/ 
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	!function() {
+/******/ 		
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// Promise = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"pageA": 0
+/******/ 		};
+/******/ 		
+/******/ 		var deferredModules = [
+/******/ 			[0,"vendor","commons-utility2_js"]
+/******/ 		];
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		var checkDeferredModules = function() {};
+/******/ 		function checkDeferredModulesImpl() {
+/******/ 			var result;
+/******/ 			for(var i = 0; i < deferredModules.length; i++) {
+/******/ 				var deferredModule = deferredModules[i];
+/******/ 				var fulfilled = true;
+/******/ 				for(var j = 1; j < deferredModule.length; j++) {
+/******/ 					var depId = deferredModule[j];
+/******/ 					if(installedChunks[depId] !== 0) fulfilled = false;
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferredModules.splice(i--, 1);
+/******/ 					result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
+/******/ 				}
+/******/ 			}
+/******/ 			return result;
+/******/ 		}
+/******/ 		__webpack_require__.x = function() {
+/******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
+/******/ 		};
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		function webpackJsonpCallback(data) {
+/******/ 			var chunkIds = data[0];
+/******/ 			var moreModules = data[1];
+/******/ 			var executeModules = data[2];
+/******/ 			var runtime = data[3];
+/******/ 		
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0, resolves = [];
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(installedChunks[chunkId]) {
+/******/ 					resolves.push(installedChunks[chunkId][0]);
+/******/ 				}
+/******/ 				installedChunks[chunkId] = 0;
+/******/ 			}
+/******/ 			for(moduleId in moreModules) {
+/******/ 				if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 				}
+/******/ 			}
+/******/ 			if(runtime) runtime(__webpack_require__);
+/******/ 			if(parentJsonpFunction) parentJsonpFunction(data);
+/******/ 		
+/******/ 			while(resolves.length) {
+/******/ 				resolves.shift()();
+/******/ 			}
+/******/ 		
+/******/ 			// add entry modules from loaded chunk to deferred list
+/******/ 			if(executeModules) deferredModules.push.apply(deferredModules, executeModules);
+/******/ 		
+/******/ 			// run deferred modules when all chunks ready
+/******/ 			return checkDeferredModules();
+/******/ 		};
+/******/ 		
+/******/ 		var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
+/******/ 		var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 		jsonpArray.push = webpackJsonpCallback;
+/******/ 		jsonpArray = jsonpArray.slice();
+/******/ 		for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 		var parentJsonpFunction = oldJsonpFunction;
+/******/ 	}();
+/******/ 	
+/******/ }
+);
+```
+
+</details>
+
 
 # dist/pageB.js
 
 ``` javascript
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// install a JSONP callback for chunk loading
-/******/ 	function webpackJsonpCallback(data) {
-/******/ 		var chunkIds = data[0];
-/******/ 		var moreModules = data[1]
-/******/ 		var executeModules = data[2];
-/******/ 		// add "moreModules" to the modules object,
-/******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [];
-/******/ 		for(;i < chunkIds.length; i++) {
-/******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
-/******/ 				resolves.push(installedChunks[chunkId][0]);
-/******/ 			}
-/******/ 			installedChunks[chunkId] = 0;
-/******/ 		}
-/******/ 		for(moduleId in moreModules) {
-/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
-/******/ 				modules[moduleId] = moreModules[moduleId];
-/******/ 			}
-/******/ 		}
-/******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
-/******/ 		while(resolves.length) {
-/******/ 			resolves.shift()();
-/******/ 		}
-/******/
-/******/ 		// add entry modules from loaded chunk to deferred list
-/******/ 		deferredModules.push.apply(deferredModules, executeModules || []);
-/******/
-/******/ 		// run deferred modules when all chunks ready
-/******/ 		return checkDeferredModules();
-/******/ 	};
-/******/ 	function checkDeferredModules() {
-/******/ 		var result;
-/******/ 		for(var i = 0; i < deferredModules.length; i++) {
-/******/ 			var deferredModule = deferredModules[i];
-/******/ 			var fullfilled = true;
-/******/ 			for(var j = 1; j < deferredModule.length; j++) {
-/******/ 				var depId = deferredModule[j];
-/******/ 				if(installedChunks[depId] !== 0) fullfilled = false;
-/******/ 			}
-/******/ 			if(fullfilled) {
-/******/ 				deferredModules.splice(i--, 1);
-/******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
-/******/ 			}
-/******/ 		}
-/******/ 		return result;
-/******/ 	}
-/******/
+/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
-/******/ 	// object to store loaded and loading chunks
-/******/ 	var installedChunks = {
-/******/ 		1: 0
-/******/ 	};
-/******/
-/******/ 	var deferredModules = [];
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -400,52 +361,11 @@ module.exports = "utility1";
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
 /******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
+/******/ 	// initialize runtime
+/******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "dist/";
-/******/
-/******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
-/******/ 	jsonpArray.push = webpackJsonpCallback;
-/******/ 	jsonpArray = jsonpArray.slice();
-/******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
-/******/ 	var parentJsonpFunction = oldJsonpFunction;
-/******/
-/******/
-/******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([4,3,4,5]);
-/******/ 	// run deferred modules when ready
-/******/ 	return checkDeferredModules();
+/******/ 	// run modules when ready
+/******/ 	return __webpack_require__.x();
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -455,7 +375,8 @@ module.exports = "utility1";
   !*** ./pageB.js ***!
   \******************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! runtime requirements: __webpack_require__, module */
+/***/ (function(module, __unusedexports, __webpack_require__) {
 
 var vendor2 = __webpack_require__(/*! vendor2 */ 5);
 var utility2 = __webpack_require__(/*! ./utility2 */ 3);
@@ -466,70 +387,109 @@ module.exports = "pageB";
 
 /***/ })
 
-/******/ });
+/******/ },
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ 	"use strict";
+/******/ 
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	!function() {
+/******/ 		
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// Promise = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"pageB": 0
+/******/ 		};
+/******/ 		
+/******/ 		var deferredModules = [
+/******/ 			[4,"vendor","commons-utility2_js","commons-utility3_js"]
+/******/ 		];
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		var checkDeferredModules = function() {};
+/******/ 		function checkDeferredModulesImpl() {
+/******/ 			var result;
+/******/ 			for(var i = 0; i < deferredModules.length; i++) {
+/******/ 				var deferredModule = deferredModules[i];
+/******/ 				var fulfilled = true;
+/******/ 				for(var j = 1; j < deferredModule.length; j++) {
+/******/ 					var depId = deferredModule[j];
+/******/ 					if(installedChunks[depId] !== 0) fulfilled = false;
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferredModules.splice(i--, 1);
+/******/ 					result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
+/******/ 				}
+/******/ 			}
+/******/ 			return result;
+/******/ 		}
+/******/ 		__webpack_require__.x = function() {
+/******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
+/******/ 		};
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		function webpackJsonpCallback(data) {
+/******/ 			var chunkIds = data[0];
+/******/ 			var moreModules = data[1];
+/******/ 			var executeModules = data[2];
+/******/ 			var runtime = data[3];
+/******/ 		
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0, resolves = [];
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(installedChunks[chunkId]) {
+/******/ 					resolves.push(installedChunks[chunkId][0]);
+/******/ 				}
+/******/ 				installedChunks[chunkId] = 0;
+/******/ 			}
+/******/ 			for(moduleId in moreModules) {
+/******/ 				if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 				}
+/******/ 			}
+/******/ 			if(runtime) runtime(__webpack_require__);
+/******/ 			if(parentJsonpFunction) parentJsonpFunction(data);
+/******/ 		
+/******/ 			while(resolves.length) {
+/******/ 				resolves.shift()();
+/******/ 			}
+/******/ 		
+/******/ 			// add entry modules from loaded chunk to deferred list
+/******/ 			if(executeModules) deferredModules.push.apply(deferredModules, executeModules);
+/******/ 		
+/******/ 			// run deferred modules when all chunks ready
+/******/ 			return checkDeferredModules();
+/******/ 		};
+/******/ 		
+/******/ 		var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
+/******/ 		var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 		jsonpArray.push = webpackJsonpCallback;
+/******/ 		jsonpArray = jsonpArray.slice();
+/******/ 		for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 		var parentJsonpFunction = oldJsonpFunction;
+/******/ 	}();
+/******/ 	
+/******/ }
+);
 ```
 
 # dist/pageC.js
 
 ``` javascript
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// install a JSONP callback for chunk loading
-/******/ 	function webpackJsonpCallback(data) {
-/******/ 		var chunkIds = data[0];
-/******/ 		var moreModules = data[1]
-/******/ 		var executeModules = data[2];
-/******/ 		// add "moreModules" to the modules object,
-/******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [];
-/******/ 		for(;i < chunkIds.length; i++) {
-/******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
-/******/ 				resolves.push(installedChunks[chunkId][0]);
-/******/ 			}
-/******/ 			installedChunks[chunkId] = 0;
-/******/ 		}
-/******/ 		for(moduleId in moreModules) {
-/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
-/******/ 				modules[moduleId] = moreModules[moduleId];
-/******/ 			}
-/******/ 		}
-/******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
-/******/ 		while(resolves.length) {
-/******/ 			resolves.shift()();
-/******/ 		}
-/******/
-/******/ 		// add entry modules from loaded chunk to deferred list
-/******/ 		deferredModules.push.apply(deferredModules, executeModules || []);
-/******/
-/******/ 		// run deferred modules when all chunks ready
-/******/ 		return checkDeferredModules();
-/******/ 	};
-/******/ 	function checkDeferredModules() {
-/******/ 		var result;
-/******/ 		for(var i = 0; i < deferredModules.length; i++) {
-/******/ 			var deferredModule = deferredModules[i];
-/******/ 			var fullfilled = true;
-/******/ 			for(var j = 1; j < deferredModule.length; j++) {
-/******/ 				var depId = deferredModule[j];
-/******/ 				if(installedChunks[depId] !== 0) fullfilled = false;
-/******/ 			}
-/******/ 			if(fullfilled) {
-/******/ 				deferredModules.splice(i--, 1);
-/******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
-/******/ 			}
-/******/ 		}
-/******/ 		return result;
-/******/ 	}
-/******/
+/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
-/******/ 	// object to store loaded and loading chunks
-/******/ 	var installedChunks = {
-/******/ 		2: 0
-/******/ 	};
-/******/
-/******/ 	var deferredModules = [];
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -559,52 +519,11 @@ module.exports = "pageB";
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
 /******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
+/******/ 	// initialize runtime
+/******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "dist/";
-/******/
-/******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
-/******/ 	jsonpArray.push = webpackJsonpCallback;
-/******/ 	jsonpArray = jsonpArray.slice();
-/******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
-/******/ 	var parentJsonpFunction = oldJsonpFunction;
-/******/
-/******/
-/******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([7,3,4]);
-/******/ 	// run deferred modules when ready
-/******/ 	return checkDeferredModules();
+/******/ 	// run modules when ready
+/******/ 	return __webpack_require__.x();
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -614,7 +533,8 @@ module.exports = "pageB";
   !*** ./pageC.js ***!
   \******************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! runtime requirements: __webpack_require__, module */
+/***/ (function(module, __unusedexports, __webpack_require__) {
 
 var utility2 = __webpack_require__(/*! ./utility2 */ 3);
 var utility3 = __webpack_require__(/*! ./utility3 */ 6);
@@ -623,7 +543,100 @@ module.exports = "pageC";
 
 /***/ })
 
-/******/ });
+/******/ },
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ 	"use strict";
+/******/ 
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	!function() {
+/******/ 		
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// Promise = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"pageC": 0
+/******/ 		};
+/******/ 		
+/******/ 		var deferredModules = [
+/******/ 			[7,"commons-utility2_js","commons-utility3_js"]
+/******/ 		];
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		var checkDeferredModules = function() {};
+/******/ 		function checkDeferredModulesImpl() {
+/******/ 			var result;
+/******/ 			for(var i = 0; i < deferredModules.length; i++) {
+/******/ 				var deferredModule = deferredModules[i];
+/******/ 				var fulfilled = true;
+/******/ 				for(var j = 1; j < deferredModule.length; j++) {
+/******/ 					var depId = deferredModule[j];
+/******/ 					if(installedChunks[depId] !== 0) fulfilled = false;
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferredModules.splice(i--, 1);
+/******/ 					result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
+/******/ 				}
+/******/ 			}
+/******/ 			return result;
+/******/ 		}
+/******/ 		__webpack_require__.x = function() {
+/******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
+/******/ 		};
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		function webpackJsonpCallback(data) {
+/******/ 			var chunkIds = data[0];
+/******/ 			var moreModules = data[1];
+/******/ 			var executeModules = data[2];
+/******/ 			var runtime = data[3];
+/******/ 		
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0, resolves = [];
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(installedChunks[chunkId]) {
+/******/ 					resolves.push(installedChunks[chunkId][0]);
+/******/ 				}
+/******/ 				installedChunks[chunkId] = 0;
+/******/ 			}
+/******/ 			for(moduleId in moreModules) {
+/******/ 				if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 				}
+/******/ 			}
+/******/ 			if(runtime) runtime(__webpack_require__);
+/******/ 			if(parentJsonpFunction) parentJsonpFunction(data);
+/******/ 		
+/******/ 			while(resolves.length) {
+/******/ 				resolves.shift()();
+/******/ 			}
+/******/ 		
+/******/ 			// add entry modules from loaded chunk to deferred list
+/******/ 			if(executeModules) deferredModules.push.apply(deferredModules, executeModules);
+/******/ 		
+/******/ 			// run deferred modules when all chunks ready
+/******/ 			return checkDeferredModules();
+/******/ 		};
+/******/ 		
+/******/ 		var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
+/******/ 		var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 		jsonpArray.push = webpackJsonpCallback;
+/******/ 		jsonpArray = jsonpArray.slice();
+/******/ 		for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 		var parentJsonpFunction = oldJsonpFunction;
+/******/ 	}();
+/******/ 	
+/******/ }
+);
 ```
 
 # Info
@@ -632,96 +645,116 @@ module.exports = "pageC";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
-                       Asset       Size  Chunks             Chunk Names
-                    pageA.js    5.6 KiB       0  [emitted]  pageA
-                    pageB.js    5.4 KiB       1  [emitted]  pageB
-                    pageC.js   5.34 KiB       2  [emitted]  pageC
-commons~pageA~pageB~pageC.js  269 bytes       3  [emitted]  commons~pageA~pageB~pageC
-      commons~pageB~pageC.js  269 bytes       4  [emitted]  commons~pageB~pageC
-                   vendor.js  536 bytes       5  [emitted]  vendor
-Entrypoint pageA = commons~pageA~pageB~pageC.js vendor.js pageA.js
-Entrypoint pageB = commons~pageA~pageB~pageC.js commons~pageB~pageC.js vendor.js pageB.js
-Entrypoint pageC = commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageC.js
-chunk    {0} pageA.js (pageA) 170 bytes ={3}= ={5}= [entry] [rendered]
-    > ./pageA pageA
-    [0] ./pageA.js 142 bytes {0} [built]
-        single entry ./pageA  pageA
-    [2] ./utility1.js 28 bytes {0} [built]
-        cjs require ./utility1 [0] ./pageA.js 2:15-36
-chunk    {1} pageB.js (pageB) 142 bytes ={3}= ={4}= ={5}= [entry] [rendered]
-    > ./pageB pageB
-    [4] ./pageB.js 142 bytes {1} [built]
-        single entry ./pageB  pageB
-chunk    {2} pageC.js (pageC) 105 bytes ={3}= ={4}= [entry] [rendered]
-    > ./pageC pageC
-    [7] ./pageC.js 105 bytes {2} [built]
-        single entry ./pageC  pageC
-chunk    {3} commons~pageA~pageB~pageC.js (commons~pageA~pageB~pageC) 28 bytes ={4}= ={2}= ={5}= ={1}= ={0}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageA~pageB~pageC)
-    > ./pageC pageC
-    > ./pageB pageB
-    > ./pageA pageA
-    [3] ./utility2.js 28 bytes {3} [built]
-        cjs require ./utility2 [0] ./pageA.js 3:15-36
-        cjs require ./utility2 [4] ./pageB.js 2:15-36
-        cjs require ./utility2 [7] ./pageC.js 1:15-36
-chunk    {4} commons~pageB~pageC.js (commons~pageB~pageC) 28 bytes ={3}= ={2}= ={5}= ={1}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageB~pageC)
-    > ./pageC pageC
-    > ./pageB pageB
-    [6] ./utility3.js 28 bytes {4} [built]
-        cjs require ./utility3 [4] ./pageB.js 3:15-36
-        cjs require ./utility3 [7] ./pageC.js 2:15-36
-chunk    {5} vendor.js (vendor) 54 bytes ={3}= ={0}= ={4}= ={1}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
+Version: webpack 5.0.0-next
+                 Asset       Size                 Chunks             Chunk Names
+commons-utility2_js.js  316 bytes  {commons-utility2_js}  [emitted]
+commons-utility3_js.js  316 bytes  {commons-utility3_js}  [emitted]
+              pageA.js   5.35 KiB                {pageA}  [emitted]  pageA
+              pageB.js   5.15 KiB                {pageB}  [emitted]  pageB
+              pageC.js   5.09 KiB                {pageC}  [emitted]  pageC
+             vendor.js  597 bytes               {vendor}  [emitted]  vendor
+Entrypoint pageA = vendor.js commons-utility2_js.js pageA.js
+Entrypoint pageB = vendor.js commons-utility2_js.js commons-utility3_js.js pageB.js
+Entrypoint pageC = commons-utility2_js.js commons-utility3_js.js pageC.js
+chunk {commons-utility2_js} commons-utility2_js.js 28 bytes ={commons-utility3_js}= ={pageA}= ={pageB}= ={pageC}= ={vendor}= [initial] [rendered] split chunk (cache group: commons)
     > ./pageA pageA
     > ./pageB pageB
-    2 modules
+    > ./pageC pageC
+ [3] ./utility2.js 28 bytes {commons-utility2_js} [built]
+     [used exports unknown]
+     cjs require ./utility2 [0] ./pageA.js 3:15-36
+     cjs require ./utility2 [4] ./pageB.js 2:15-36
+     cjs require ./utility2 [7] ./pageC.js 1:15-36
+chunk {commons-utility3_js} commons-utility3_js.js 28 bytes ={commons-utility2_js}= ={pageB}= ={pageC}= ={vendor}= [initial] [rendered] split chunk (cache group: commons)
+    > ./pageB pageB
+    > ./pageC pageC
+ [6] ./utility3.js 28 bytes {commons-utility3_js} [built]
+     [used exports unknown]
+     cjs require ./utility3 [4] ./pageB.js 3:15-36
+     cjs require ./utility3 [7] ./pageC.js 2:15-36
+chunk {pageA} pageA.js (pageA) 165 bytes (javascript) 2.28 KiB (runtime) ={commons-utility2_js}= ={vendor}= [entry] [rendered]
+    > ./pageA pageA
+ [0] ./pageA.js 137 bytes {pageA} [built]
+     [used exports unknown]
+     entry ./pageA pageA
+ [2] ./utility1.js 28 bytes {pageA} [built]
+     [used exports unknown]
+     cjs require ./utility1 [0] ./pageA.js 2:15-36
+     + 1 hidden chunk module
+chunk {pageB} pageB.js (pageB) 137 bytes (javascript) 2.3 KiB (runtime) ={commons-utility2_js}= ={commons-utility3_js}= ={vendor}= [entry] [rendered]
+    > ./pageB pageB
+ [4] ./pageB.js 137 bytes {pageB} [built]
+     [used exports unknown]
+     entry ./pageB pageB
+     + 1 hidden chunk module
+chunk {pageC} pageC.js (pageC) 102 bytes (javascript) 2.29 KiB (runtime) ={commons-utility2_js}= ={commons-utility3_js}= [entry] [rendered]
+    > ./pageC pageC
+ [7] ./pageC.js 102 bytes {pageC} [built]
+     [used exports unknown]
+     entry ./pageC pageC
+     + 1 hidden chunk module
+chunk {vendor} vendor.js (vendor) 54 bytes ={commons-utility2_js}= ={commons-utility3_js}= ={pageA}= ={pageB}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
+    > ./pageA pageA
+    > ./pageB pageB
+ [1] ./node_modules/vendor1.js 27 bytes {vendor} [built]
+     [used exports unknown]
+     cjs require vendor1 [0] ./pageA.js 1:14-32
+ [5] ./node_modules/vendor2.js 27 bytes {vendor} [built]
+     [used exports unknown]
+     cjs require vendor2 [4] ./pageB.js 1:14-32
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
-                       Asset       Size  Chunks             Chunk Names
-commons~pageA~pageB~pageC.js   96 bytes       0  [emitted]  commons~pageA~pageB~pageC
-                   vendor.js  134 bytes       1  [emitted]  vendor
-      commons~pageB~pageC.js   97 bytes       2  [emitted]  commons~pageB~pageC
-                    pageC.js    1.1 KiB       3  [emitted]  pageC
-                    pageB.js   1.11 KiB       4  [emitted]  pageB
-                    pageA.js   1.15 KiB       5  [emitted]  pageA
-Entrypoint pageA = commons~pageA~pageB~pageC.js vendor.js pageA.js
-Entrypoint pageB = commons~pageA~pageB~pageC.js commons~pageB~pageC.js vendor.js pageB.js
-Entrypoint pageC = commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageC.js
-chunk    {0} commons~pageA~pageB~pageC.js (commons~pageA~pageB~pageC) 28 bytes ={2}= ={3}= ={1}= ={4}= ={5}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageA~pageB~pageC)
-    > ./pageC pageC
-    > ./pageB pageB
-    > ./pageA pageA
-    [0] ./utility2.js 28 bytes {0} [built]
-        cjs require ./utility2 [2] ./pageC.js 1:15-36
-        cjs require ./utility2 [4] ./pageB.js 2:15-36
-        cjs require ./utility2 [7] ./pageA.js 3:15-36
-chunk    {1} vendor.js (vendor) 54 bytes ={0}= ={5}= ={2}= ={4}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
+Version: webpack 5.0.0-next
+                 Asset       Size                 Chunks             Chunk Names
+commons-utility2_js.js  117 bytes  {commons-utility2_js}  [emitted]
+commons-utility3_js.js  118 bytes  {commons-utility3_js}  [emitted]
+              pageA.js  959 bytes                {pageA}  [emitted]  pageA
+              pageB.js  943 bytes                {pageB}  [emitted]  pageB
+              pageC.js  927 bytes                {pageC}  [emitted]  pageC
+             vendor.js  141 bytes               {vendor}  [emitted]  vendor
+Entrypoint pageA = vendor.js commons-utility2_js.js pageA.js
+Entrypoint pageB = vendor.js commons-utility2_js.js commons-utility3_js.js pageB.js
+Entrypoint pageC = commons-utility2_js.js commons-utility3_js.js pageC.js
+chunk {commons-utility2_js} commons-utility2_js.js 28 bytes ={commons-utility3_js}= ={pageA}= ={pageB}= ={pageC}= ={vendor}= [initial] [rendered] split chunk (cache group: commons)
     > ./pageA pageA
     > ./pageB pageB
-    2 modules
-chunk    {2} commons~pageB~pageC.js (commons~pageB~pageC) 28 bytes ={0}= ={3}= ={1}= ={4}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageB~pageC)
     > ./pageC pageC
+ [37] ./utility2.js 28 bytes {commons-utility2_js} [built]
+      cjs require ./utility2 [912] ./pageC.js 1:15-36
+      cjs require ./utility2 [953] ./pageA.js 3:15-36
+      cjs require ./utility2 [954] ./pageB.js 2:15-36
+chunk {commons-utility3_js} commons-utility3_js.js 28 bytes ={commons-utility2_js}= ={pageB}= ={pageC}= ={vendor}= [initial] [rendered] split chunk (cache group: commons)
     > ./pageB pageB
-    [1] ./utility3.js 28 bytes {2} [built]
-        cjs require ./utility3 [2] ./pageC.js 2:15-36
-        cjs require ./utility3 [4] ./pageB.js 3:15-36
-chunk    {3} pageC.js (pageC) 105 bytes ={0}= ={2}= [entry] [rendered]
     > ./pageC pageC
-    [2] ./pageC.js 105 bytes {3} [built]
-        single entry ./pageC  pageC
-chunk    {4} pageB.js (pageB) 142 bytes ={0}= ={2}= ={1}= [entry] [rendered]
-    > ./pageB pageB
-    [4] ./pageB.js 142 bytes {4} [built]
-        single entry ./pageB  pageB
-chunk    {5} pageA.js (pageA) 170 bytes ={0}= ={1}= [entry] [rendered]
+ [544] ./utility3.js 28 bytes {commons-utility3_js} [built]
+       cjs require ./utility3 [912] ./pageC.js 2:15-36
+       cjs require ./utility3 [954] ./pageB.js 3:15-36
+chunk {pageA} pageA.js (pageA) 165 bytes (javascript) 2.28 KiB (runtime) ={commons-utility2_js}= ={vendor}= [entry] [rendered]
     > ./pageA pageA
-    [5] ./utility1.js 28 bytes {5} [built]
-        cjs require ./utility1 [7] ./pageA.js 2:15-36
-    [7] ./pageA.js 142 bytes {5} [built]
-        single entry ./pageA  pageA
+ [105] ./utility1.js 28 bytes {pageA} [built]
+       cjs require ./utility1 [953] ./pageA.js 2:15-36
+ [953] ./pageA.js 137 bytes {pageA} [built]
+       entry ./pageA pageA
+     + 1 hidden chunk module
+chunk {pageB} pageB.js (pageB) 137 bytes (javascript) 2.3 KiB (runtime) ={commons-utility2_js}= ={commons-utility3_js}= ={vendor}= [entry] [rendered]
+    > ./pageB pageB
+ [954] ./pageB.js 137 bytes {pageB} [built]
+       entry ./pageB pageB
+     + 1 hidden chunk module
+chunk {pageC} pageC.js (pageC) 102 bytes (javascript) 2.3 KiB (runtime) ={commons-utility2_js}= ={commons-utility3_js}= [entry] [rendered]
+    > ./pageC pageC
+ [912] ./pageC.js 102 bytes {pageC} [built]
+       entry ./pageC pageC
+     + 1 hidden chunk module
+chunk {vendor} vendor.js (vendor) 54 bytes ={commons-utility2_js}= ={commons-utility3_js}= ={pageA}= ={pageB}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
+    > ./pageA pageA
+    > ./pageB pageB
+ [333] ./node_modules/vendor1.js 27 bytes {vendor} [built]
+       cjs require vendor1 [953] ./pageA.js 1:14-32
+ [407] ./node_modules/vendor2.js 27 bytes {vendor} [built]
+       cjs require vendor2 [954] ./pageB.js 1:14-32
 ```

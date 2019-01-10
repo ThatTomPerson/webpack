@@ -29,7 +29,7 @@ exports.readFile = function() {};
 // using module.exports would be equivalent,
 // webpack doesn't care which syntax is used
 
-// AMD modules are also possible and equvivalent to CommonJs modules
+// AMD modules are also possible and equivalent to CommonJs modules
 ```
 
 # reexport-commonjs.js
@@ -69,7 +69,8 @@ export var named = "named";
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
 ``` javascript
-/******/ (function(modules) { // webpackBootstrap
+/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -98,46 +99,12 @@ export var named = "named";
 /******/ 	}
 /******/
 /******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
 /******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "dist/";
-/******/
+/******/ 	// initialize runtime
+/******/ 	runtime(__webpack_require__);
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 ```
@@ -151,7 +118,8 @@ export var named = "named";
   !*** ./example.js ***!
   \********************/
 /*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.n, __webpack_require__.d */
+/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
@@ -184,7 +152,8 @@ Object(_reexport_commonjs__WEBPACK_IMPORTED_MODULE_1__["readFile"])("file");
   !*** ./fs.js ***!
   \***************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/*! runtime requirements: __webpack_exports__ */
+/***/ (function(__unusedmodule, exports) {
 
 // an example CommonJs module
 // content is omitted for brevity
@@ -192,7 +161,7 @@ exports.readFile = function() {};
 // using module.exports would be equivalent,
 // webpack doesn't care which syntax is used
 
-// AMD modules are also possible and equvivalent to CommonJs modules
+// AMD modules are also possible and equivalent to CommonJs modules
 
 
 /***/ }),
@@ -201,7 +170,8 @@ exports.readFile = function() {};
   !*** ./reexport-commonjs.js ***!
   \******************************/
 /*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.n, __webpack_require__.d */
+/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
@@ -223,7 +193,8 @@ __webpack_require__.r(__webpack_exports__);
   !*** ./example2.js ***!
   \*********************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! runtime requirements: __webpack_require__ */
+/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 // CommonJs module
 
@@ -240,7 +211,8 @@ var namedExport = module.named;
   !*** ./harmony.js ***!
   \********************/
 /*! exports provided: default, named */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
+/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
@@ -251,8 +223,55 @@ var named = "named";
 
 
 /***/ })
-/******/ ]);
+/******/ ],
 ```
+
+<details><summary><code>function(__webpack_require__) { /* webpackRuntimeModules */ });</code></summary>
+
+``` js
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ 	"use strict";
+/******/ 
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = function(exports) {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	!function() {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = function(module) {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				function getDefault() { return module['default']; } :
+/******/ 				function getModuleExports() { return module; };
+/******/ 			__webpack_require__.d(getter, 'a', getter);
+/******/ 			return getter;
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getter */
+/******/ 	!function() {
+/******/ 		// define getter function for harmony exports
+/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
+/******/ 		__webpack_require__.d = function(exports, name, getter) {
+/******/ 			if(!hasOwnProperty.call(exports, name)) {
+/******/ 				Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 			}
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ }
+);
+```
+
+</details>
+
 
 # Info
 
@@ -260,65 +279,72 @@ var named = "named";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 5.0.0-next
     Asset      Size  Chunks             Chunk Names
-output.js  6.13 KiB       0  [emitted]  main
+output.js  6.79 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 1.17 KiB [entry] [rendered]
+chunk {0} output.js (main) 1.13 KiB (javascript) 888 bytes (runtime) [entry] [rendered]
     > .\example.js main
-    [0] ./example.js 389 bytes {0} [built]
-        [no exports]
-        single entry .\example.js  main
-    [1] ./fs.js 265 bytes {0} [built]
-        harmony side effect evaluation ./fs [0] ./example.js 4:0-22
-        harmony side effect evaluation ./fs [0] ./example.js 5:0-32
-        harmony side effect evaluation ./fs [0] ./example.js 6:0-28
-        harmony import specifier ./fs [0] ./example.js 7:0-2
-        harmony import specifier ./fs [0] ./example.js 8:0-8
-        harmony import specifier ./fs [0] ./example.js 9:0-12
-        harmony side effect evaluation ./fs [2] ./reexport-commonjs.js 2:0-21
-        harmony export imported specifier ./fs [2] ./reexport-commonjs.js 2:0-21
-    [2] ./reexport-commonjs.js 308 bytes {0} [built]
-        harmony side effect evaluation ./reexport-commonjs [0] ./example.js 12:0-60
-        harmony import specifier ./reexport-commonjs [0] ./example.js 13:0-9
-    [3] ./example2.js 159 bytes {0} [built]
-        harmony side effect evaluation ./example2 [0] ./example.js 16:0-20
-    [4] ./harmony.js 78 bytes {0} [built]
-        [exports: default, named]
-        cjs require ./harmony [3] ./example2.js 4:13-33
+ [0] ./example.js 373 bytes {0} [built]
+     [no exports]
+     [used exports unknown]
+     entry .\example.js main
+ [1] ./fs.js 257 bytes {0} [built]
+     [used exports unknown]
+     harmony side effect evaluation ./fs [0] ./example.js 4:0-22
+     harmony side effect evaluation ./fs [0] ./example.js 5:0-32
+     harmony side effect evaluation ./fs [0] ./example.js 6:0-28
+     harmony import specifier ./fs [0] ./example.js 7:0-2
+     harmony import specifier ./fs [0] ./example.js 8:0-8
+     harmony import specifier ./fs [0] ./example.js 9:0-12
+     harmony side effect evaluation ./fs [2] ./reexport-commonjs.js 2:0-21
+     harmony export imported specifier ./fs [2] ./reexport-commonjs.js 2:0-21
+ [2] ./reexport-commonjs.js 301 bytes {0} [built]
+     [used exports unknown]
+     harmony side effect evaluation ./reexport-commonjs [0] ./example.js 12:0-60
+     harmony import specifier ./reexport-commonjs [0] ./example.js 13:0-9
+ [3] ./example2.js 152 bytes {0} [built]
+     [used exports unknown]
+     harmony side effect evaluation ./example2 [0] ./example.js 16:0-20
+ [4] ./harmony.js 75 bytes {0} [built]
+     [exports: default, named]
+     [used exports unknown]
+     cjs require ./harmony [3] ./example2.js 4:13-33
+     + 3 hidden chunk modules
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
-    Asset       Size  Chunks             Chunk Names
-output.js  993 bytes       0  [emitted]  main
+Version: webpack 5.0.0-next
+    Asset      Size  Chunks             Chunk Names
+output.js  1.11 KiB   {404}  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 1.17 KiB [entry] [rendered]
+chunk {404} output.js (main) 1.13 KiB (javascript) 888 bytes (runtime) [entry] [rendered]
     > .\example.js main
-    [0] ./fs.js 265 bytes {0} [built]
-        [only some exports used: default, readFile]
-        harmony side effect evaluation ./fs [1] ./reexport-commonjs.js 2:0-21
-        harmony export imported specifier ./fs [1] ./reexport-commonjs.js 2:0-21
-        harmony side effect evaluation ./fs [4] ./example.js 4:0-22
-        harmony side effect evaluation ./fs [4] ./example.js 5:0-32
-        harmony side effect evaluation ./fs [4] ./example.js 6:0-28
-        harmony import specifier ./fs [4] ./example.js 7:0-2
-        harmony import specifier ./fs [4] ./example.js 8:0-8
-        harmony import specifier ./fs [4] ./example.js 9:0-12
-    [1] ./reexport-commonjs.js 308 bytes {0} [built]
-        [only some exports used: readFile]
-        harmony side effect evaluation ./reexport-commonjs [4] ./example.js 12:0-60
-        harmony import specifier ./reexport-commonjs [4] ./example.js 13:0-9
-    [2] ./harmony.js 78 bytes {0} [built]
-        [exports: default, named]
-        cjs require ./harmony [3] ./example2.js 4:13-33
-    [3] ./example2.js 159 bytes {0} [built]
-        [no exports used]
-        harmony side effect evaluation ./example2 [4] ./example.js 16:0-20
-    [4] ./example.js 389 bytes {0} [built]
-        [no exports]
-        single entry .\example.js  main
+ [118] ./example2.js 152 bytes {404} [built]
+       [no exports used]
+       harmony side effect evaluation ./example2 [275] ./example.js 16:0-20
+ [212] ./reexport-commonjs.js 301 bytes {404} [built]
+       [only some exports used: readFile]
+       harmony side effect evaluation ./reexport-commonjs [275] ./example.js 12:0-60
+       harmony import specifier ./reexport-commonjs [275] ./example.js 13:0-9
+ [275] ./example.js 373 bytes {404} [built]
+       [no exports]
+       entry .\example.js main
+ [325] ./harmony.js 75 bytes {404} [built]
+       [exports: default, named]
+       cjs require ./harmony [118] ./example2.js 4:13-33
+ [656] ./fs.js 257 bytes {404} [built]
+       [only some exports used: default, readFile]
+       harmony side effect evaluation ./fs [212] ./reexport-commonjs.js 2:0-21
+       harmony export imported specifier ./fs [212] ./reexport-commonjs.js 2:0-21
+       harmony side effect evaluation ./fs [275] ./example.js 4:0-22
+       harmony side effect evaluation ./fs [275] ./example.js 5:0-32
+       harmony side effect evaluation ./fs [275] ./example.js 6:0-28
+       harmony import specifier ./fs [275] ./example.js 7:0-2
+       harmony import specifier ./fs [275] ./example.js 8:0-8
+       harmony import specifier ./fs [275] ./example.js 9:0-12
+     + 3 hidden chunk modules
 ```

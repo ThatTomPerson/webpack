@@ -18,8 +18,8 @@ console.log(__("Missing Text"));
 var path = require("path");
 var I18nPlugin = require("i18n-webpack-plugin");
 var languages = {
-	"en": null,
-	"de": require("./de.json")
+	en: null,
+	de: require("./de.json")
 };
 module.exports = Object.keys(languages).map(function(language) {
 	return {
@@ -30,11 +30,7 @@ module.exports = Object.keys(languages).map(function(language) {
 			path: path.join(__dirname, "dist"),
 			filename: language + ".output.js"
 		},
-		plugins: [
-			new I18nPlugin(
-				languages[language]
-			)
-		]
+		plugins: [new I18nPlugin(languages[language])]
 	};
 });
 ```
@@ -90,17 +86,32 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -184,17 +195,32 @@ console.log("Missing Text");
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -238,25 +264,25 @@ console.log("Missing Text");
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.28.0
 Child en:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-           Asset     Size  Chunks             Chunk Names
-    en.output.js  2.8 KiB       0  [emitted]  main
+           Asset      Size  Chunks             Chunk Names
+    en.output.js  3.76 KiB       0  [emitted]  main
     Entrypoint main = en.output.js
-    chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
+    chunk    {0} en.output.js (main) 64 bytes [entry] [rendered]
         > ./example main
-        [0] ./example.js 65 bytes {0} [built]
-            single entry ./example  main
+     [0] ./example.js 64 bytes {0} [built]
+         single entry ./example  main
 Child de:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-           Asset     Size  Chunks             Chunk Names
-    de.output.js  2.8 KiB       0  [emitted]  main
+           Asset      Size  Chunks             Chunk Names
+    de.output.js  3.76 KiB       0  [emitted]  main
     Entrypoint main = de.output.js
-    chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
+    chunk    {0} de.output.js (main) 64 bytes [entry] [rendered]
         > ./example main
-        [0] ./example.js 65 bytes {0} [built] [1 warning]
-            single entry ./example  main
+     [0] ./example.js 64 bytes {0} [built] [1 warning]
+         single entry ./example  main
     
     WARNING in ./example.js
     Missing localization: Missing Text
@@ -266,25 +292,25 @@ Child de:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.28.0
 Child en:
     Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset       Size  Chunks             Chunk Names
-    en.output.js  606 bytes       0  [emitted]  main
+    en.output.js  991 bytes       0  [emitted]  main
     Entrypoint main = en.output.js
-    chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
+    chunk    {0} en.output.js (main) 64 bytes [entry] [rendered]
         > ./example main
-        [0] ./example.js 65 bytes {0} [built]
-            single entry ./example  main
+     [0] ./example.js 64 bytes {0} [built]
+         single entry ./example  main
 Child de:
     Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset       Size  Chunks             Chunk Names
-    de.output.js  605 bytes       0  [emitted]  main
+    de.output.js  990 bytes       0  [emitted]  main
     Entrypoint main = de.output.js
-    chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
+    chunk    {0} de.output.js (main) 64 bytes [entry] [rendered]
         > ./example main
-        [0] ./example.js 65 bytes {0} [built] [1 warning]
-            single entry ./example  main
+     [0] ./example.js 64 bytes {0} [built] [1 warning]
+         single entry ./example  main
     
     WARNING in ./example.js
     Missing localization: Missing Text

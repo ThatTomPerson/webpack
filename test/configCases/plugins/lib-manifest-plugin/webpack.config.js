@@ -7,8 +7,11 @@ module.exports = {
 	},
 	plugins: [
 		new LibManifestPlugin({
-			path: path.resolve(__dirname, "../../../js/config/plugins/lib-manifest-plugin/[name]-manifest.json"),
-			name: "[name]_[hash]"
+			path: path.resolve(
+				__dirname,
+				"../../../js/config/plugins/lib-manifest-plugin/[name]-manifest.json"
+			),
+			name: "[name]_[fullhash]"
 		})
 	],
 	node: {

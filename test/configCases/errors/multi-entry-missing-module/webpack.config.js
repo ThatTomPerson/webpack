@@ -1,6 +1,7 @@
 const IgnorePlugin = require("../../../../lib/IgnorePlugin");
 module.exports = {
 	entry: {
+		a: "./intentionally-missing-module.js",
 		b: ["./intentionally-missing-module.js"],
 		bundle0: ["./index"]
 	},
@@ -8,9 +9,8 @@ module.exports = {
 		filename: "[name].js"
 	},
 	plugins: [
-		new IgnorePlugin(new RegExp(/intentionally-missing-module/))
-	],
-	node: {
-		__dirname: false
-	}
+		new IgnorePlugin({
+			resourceRegExp: new RegExp(/intentionally-missing-module/)
+		})
+	]
 };

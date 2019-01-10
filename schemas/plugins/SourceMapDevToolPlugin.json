@@ -1,22 +1,21 @@
 {
-  "id": "SourceMapDevToolPlugin",
-  "type": "object",
-  "additionalProperties": false,
   "definitions": {
     "rule": {
       "oneOf": [
         {
-          "instanceof": "RegExp"
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
         },
         {
-          "minLength": 1,
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         }
       ]
     },
     "rules": {
       "oneOf": [
         {
+          "type": "array",
           "items": {
             "description": "A rule condition",
             "anyOf": [
@@ -24,8 +23,7 @@
                 "$ref": "#/definitions/rule"
               }
             ]
-          },
-          "type": "array"
+          }
         },
         {
           "$ref": "#/definitions/rule"
@@ -33,12 +31,64 @@
       ]
     }
   },
+  "title": "SourceMapDevToolPluginOptions",
+  "type": "object",
+  "additionalProperties": false,
   "properties": {
-    "test": {
-      "description": "Include source maps for modules based on their extension (defaults to .js and .css)",
+    "append": {
+      "description": "Appends the given value to the original asset. Usually the #sourceMappingURL comment. [url] is replaced with a URL to the source map file. false disables the appending",
+      "oneOf": [
+        {
+          "description": "Append no SourceMap comment to the bundle, but still generate SourceMaps",
+          "enum": [false, null]
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "columns": {
+      "description": "Indicates whether column mappings should be used (defaults to true)",
+      "type": "boolean"
+    },
+    "exclude": {
+      "description": "Exclude modules that match the given value from source map generation",
       "anyOf": [
         {
           "$ref": "#/definitions/rules"
+        }
+      ]
+    },
+    "fallbackModuleFilenameTemplate": {
+      "description": "Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict",
+      "oneOf": [
+        {
+          "description": "Custom function generating the identifer",
+          "instanceof": "Function",
+          "tsType": "Function"
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "fileContext": {
+      "description": "Path prefix to which the [file] placeholder is relative to",
+      "type": "string"
+    },
+    "filename": {
+      "description": "Defines the output filename of the SourceMap (will be inlined if no value is provided)",
+      "oneOf": [
+        {
+          "description": "Disable separate SourceMap file and inline SourceMap as DataUrl",
+          "enum": [false, null]
+        },
+        {
+          "type": "string",
+          "absolutePath": false,
+          "minLength": 1
         }
       ]
     },
@@ -50,70 +100,21 @@
         }
       ]
     },
-    "exclude": {
-      "description": "Exclude modules that match the given value from source map generation",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/rules"
-        }
-      ]
-    },
-    "filename": {
-      "description": "Defines the output filename of the SourceMap (will be inlined if no value is provided)",
-      "oneOf": [
-        {
-          "description": "Disable separate SourceMap file and inline SourceMap as DataUrl",
-          "enum": [
-            false,
-            null
-          ]
-        },
-        {
-          "type": "string",
-          "minLength": 1,
-          "absolutePath": false
-        }
-      ]
-    },
-    "append": {
-      "description": "Appends the given value to the original asset. Usually the #sourceMappingURL comment. [url] is replaced with a URL to the source map file. false disables the appending",
-      "oneOf": [
-        {
-          "description": "Append no SourceMap comment to the bundle, but still generate SourceMaps",
-          "enum": [
-            false,
-            null
-          ]
-        },
-        {
-          "minLength": 1,
-          "type": "string"
-        }
-      ]
+    "module": {
+      "description": "Indicates whether SourceMaps from loaders should be used (defaults to true)",
+      "type": "boolean"
     },
     "moduleFilenameTemplate": {
       "description": "Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap",
       "oneOf": [
         {
           "description": "Custom function generating the identifer",
-          "instanceof": "Function"
+          "instanceof": "Function",
+          "tsType": "Function"
         },
         {
-          "minLength": 1,
-          "type": "string"
-        }
-      ]
-    },
-    "fallbackModuleFilenameTemplate": {
-      "description": "Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict",
-      "oneOf": [
-        {
-          "description": "Custom function generating the identifer",
-          "instanceof": "Function"
-        },
-        {
-          "minLength": 1,
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         }
       ]
     },
@@ -121,66 +122,23 @@
       "description": "Namespace prefix to allow multiple webpack roots in the devtools",
       "type": "string"
     },
-    "module": {
-      "description": "Indicates whether SourceMaps from loaders should be used (defaults to true)",
-      "type": "boolean"
-    },
-    "columns": {
-      "description": "Indicates whether column mappings should be used (defaults to true)",
-      "type": "boolean"
-    },
     "noSources": {
       "description": "Omit the 'sourceContents' array from the SourceMap",
       "type": "boolean"
-    },
-    "sourceRoot": {
-      "description": "Provide a custom value for the 'sourceRoot' property in the SourceMap",
-      "type": "string"
     },
     "publicPath": {
       "description": "Provide a custom public path for the SourceMapping comment",
       "type": "string"
     },
-    "fileContext": {
-      "description": "Path prefix to which the [file] placeholder is relative to",
+    "sourceRoot": {
+      "description": "Provide a custom value for the 'sourceRoot' property in the SourceMap",
       "type": "string"
     },
-    "lineToLine": {
-      "description": "(deprecated) try to map original files line to line to generated files",
+    "test": {
+      "description": "Include source maps for modules based on their extension (defaults to .js and .css)",
       "anyOf": [
         {
-          "type": "boolean"
-        },
-        {
-          "description": "Simplify and speed up source mapping by using line to line source mappings for matched modules",
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "test": {
-              "description": "Include source maps for modules based on their extension (defaults to .js and .css)",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/rules"
-                }
-              ]
-            },
-            "include": {
-              "description": "Include source maps for module paths that match the given value",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/rules"
-                }
-              ]
-            },
-            "exclude": {
-              "description": "Exclude modules that match the given value from source map generation",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/rules"
-                }
-              ]
-            }
-          }
+          "$ref": "#/definitions/rules"
         }
       ]
     }

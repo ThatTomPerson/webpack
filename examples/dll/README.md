@@ -36,12 +36,13 @@ module.exports = {
 # dist/MyDll.alpha.js
 
 ``` javascript
-var alpha_ae937b5d3e880b635a69 =
+var alpha_382bfbbbdad9425c171d =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
 ``` js
-/******/ (function(modules) { // webpackBootstrap
+/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -70,46 +71,10 @@ var alpha_ae937b5d3e880b635a69 =
 /******/ 	}
 /******/
 /******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 ```
@@ -123,8 +88,9 @@ var alpha_ae937b5d3e880b635a69 =
   !*** dll alpha ***!
   \*****************/
 /*! no static exports found */
+/*! runtime requirements: __webpack_require__, module */
 /*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unusedexports, __webpack_require__) {
 
 module.exports = __webpack_require__;
 
@@ -134,8 +100,9 @@ module.exports = __webpack_require__;
   !*** ./alpha.js ***!
   \******************/
 /*! no static exports found */
+/*! runtime requirements: module */
 /*! all exports used */
-/***/ (function(module, exports) {
+/***/ (function(module) {
 
 module.exports = "alpha";
 
@@ -145,8 +112,9 @@ module.exports = "alpha";
   !*** ./a.js ***!
   \**************/
 /*! no static exports found */
+/*! runtime requirements: module */
 /*! all exports used */
-/***/ (function(module, exports) {
+/***/ (function(module) {
 
 module.exports = "a";
 
@@ -156,8 +124,9 @@ module.exports = "a";
   !*** ../node_modules/module.js ***!
   \*********************************/
 /*! no static exports found */
+/*! runtime requirements: module */
 /*! all exports used */
-/***/ (function(module, exports) {
+/***/ (function(module) {
 
 module.exports = "module";
 
@@ -168,7 +137,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ``` javascript
-{"name":"alpha_ae937b5d3e880b635a69","content":{"./alpha.js":{"id":1,"buildMeta":{"providedExports":true}},"./a.js":{"id":2,"buildMeta":{"providedExports":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"providedExports":true}}}}
+{"name":"alpha_382bfbbbdad9425c171d","content":{"./alpha.js":{"id":1,"buildMeta":{"providedExports":true}},"./a.js":{"id":2,"buildMeta":{"providedExports":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"providedExports":true}}}}
 ```
 
 # Info
@@ -177,74 +146,78 @@ module.exports = "module";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 5.0.0-next
          Asset      Size  Chunks             Chunk Names
-MyDll.alpha.js  3.46 KiB       0  [emitted]  alpha
- MyDll.beta.js  3.43 KiB       1  [emitted]  beta
+MyDll.alpha.js  2.19 KiB     {0}  [emitted]  alpha
+ MyDll.beta.js  2.16 KiB     {1}  [emitted]  beta
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
-chunk    {0} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
+chunk {0} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
     > alpha
-    [0] dll alpha 12 bytes {0} [built]
-        dll entry 
-        
-    [1] ./alpha.js 25 bytes {0} [built]
-        
-        single entry ./alpha [0] dll alpha alpha:0
-    [2] ./a.js 21 bytes {0} [built]
-        
-        single entry ./a [0] dll alpha alpha:1
-     + 1 hidden module
-chunk    {1} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
+ [0] dll alpha 12 bytes {0} [built]
+     dll entry
+     DllPlugin
+ [1] ./alpha.js 25 bytes {0} [built]
+     entry ./alpha [0] dll alpha alpha[0]
+     DllPlugin
+ [2] ./a.js 21 bytes {0} [built]
+     entry ./a [0] dll alpha alpha[1]
+     DllPlugin
+ [3] ../node_modules/module.js 26 bytes {0} [built]
+     entry module [0] dll alpha alpha[2]
+     DllPlugin
+chunk {1} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
     > beta
-    [4] dll beta 12 bytes {1} [built]
-        dll entry 
-        
-    [5] ./beta.js 24 bytes {1} [built]
-        
-        single entry ./beta [4] dll beta beta:0
-    [6] ./b.js 21 bytes {1} [built]
-        
-        single entry ./b [4] dll beta beta:1
-    [7] ./c.jsx 23 bytes {1} [built]
-        
-        single entry ./c [4] dll beta beta:2
+ [4] dll beta 12 bytes {1} [built]
+     dll entry
+     DllPlugin
+ [5] ./beta.js 24 bytes {1} [built]
+     entry ./beta [4] dll beta beta[0]
+     DllPlugin
+ [6] ./b.js 21 bytes {1} [built]
+     entry ./b [4] dll beta beta[1]
+     DllPlugin
+ [7] ./c.jsx 23 bytes {1} [built]
+     entry ./c [4] dll beta beta[2]
+     DllPlugin
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 5.0.0-next
          Asset       Size  Chunks             Chunk Names
- MyDll.beta.js  691 bytes       0  [emitted]  beta
-MyDll.alpha.js  700 bytes       1  [emitted]  alpha
+MyDll.alpha.js  353 bytes   {963}  [emitted]  alpha
+ MyDll.beta.js  347 bytes   {188}  [emitted]  beta
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
-chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
+chunk {188} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
     > beta
-    [0] ./c.jsx 23 bytes {0} [built]
-        
-        single entry ./c [3] dll beta beta:2
-    [1] ./b.js 21 bytes {0} [built]
-        
-        single entry ./b [3] dll beta beta:1
-    [2] ./beta.js 24 bytes {0} [built]
-        
-        single entry ./beta [3] dll beta beta:0
-    [3] dll beta 12 bytes {0} [built]
-        dll entry 
-        
-chunk    {1} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
+  [21] ./b.js 21 bytes {188} [built]
+       entry ./b [350] dll beta beta[1]
+       DllPlugin
+ [145] ./beta.js 24 bytes {188} [built]
+       entry ./beta [350] dll beta beta[0]
+       DllPlugin
+ [235] ./c.jsx 23 bytes {188} [built]
+       entry ./c [350] dll beta beta[2]
+       DllPlugin
+ [350] dll beta 12 bytes {188} [built]
+       dll entry
+       DllPlugin
+chunk {963} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
     > alpha
-    [5] ./a.js 21 bytes {1} [built]
-        
-        single entry ./a [7] dll alpha alpha:1
-    [6] ./alpha.js 25 bytes {1} [built]
-        
-        single entry ./alpha [7] dll alpha alpha:0
-    [7] dll alpha 12 bytes {1} [built]
-        dll entry 
-        
-     + 1 hidden module
+ [162] ./a.js 21 bytes {963} [built]
+       entry ./a [673] dll alpha alpha[1]
+       DllPlugin
+ [673] dll alpha 12 bytes {963} [built]
+       dll entry
+       DllPlugin
+ [683] ../node_modules/module.js 26 bytes {963} [built]
+       entry module [673] dll alpha alpha[2]
+       DllPlugin
+ [930] ./alpha.js 25 bytes {963} [built]
+       entry ./alpha [673] dll alpha alpha[0]
+       DllPlugin
 ```

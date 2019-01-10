@@ -1,5 +1,4 @@
 module.exports = [
-
 	{
 		mode: "production",
 		entry: {
@@ -52,8 +51,8 @@ module.exports = [
 		},
 		stats: {
 			assets: false,
+			orphanModules: true,
 			optimizationBailout: true
 		}
 	}
-
 ];

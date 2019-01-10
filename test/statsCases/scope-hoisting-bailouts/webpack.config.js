@@ -8,8 +8,10 @@ module.exports = {
 	output: {
 		filename: "[name].js"
 	},
+	externals: ["external"],
 	stats: {
 		assets: false,
+		orphanModules: true,
 		optimizationBailout: true
 	}
 };

@@ -18,7 +18,7 @@ webpack therefore uses a approach called **"Partial Scope Hoisting"** or "Module
 
 ![](graph3.png)
 
-While module concatentation identifiers in modules are renamed to avoid conflicts and internal imports are simplified. External imports and exports from the root module use the existing ESM constructs.
+While module concatenation identifiers in modules are renamed to avoid conflicts and internal imports are simplified. External imports and exports from the root module use the existing ESM constructs.
 
 # example.js
 
@@ -91,16 +91,16 @@ While module concatentation identifiers in modules are renamed to avoid conflict
 {{dist/output.js}}
 ```
 
-# dist/0.output.js
+# dist/78.output.js
 
 ``` javascript
-{{dist/0.output.js}}
+{{dist/78.output.js}}
 ```
 
 Minimized
 
 ``` javascript
-{{production:dist/0.output.js}}
+{{production:dist/78.output.js}}
 ```
 
 # Info

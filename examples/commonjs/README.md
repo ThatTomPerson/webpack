@@ -9,15 +9,15 @@ You can also see the info messages webpack prints to console (for both normal an
 # example.js
 
 ``` javascript
-var inc = require('./increment').increment;
-var a = 1;
+const inc = require('./increment').increment;
+const a = 1;
 inc(a); // 2
 ```
 
 # increment.js
 
 ``` javascript
-var add = require('./math').add;
+const add = require('./math').add;
 exports.increment = function(val) {
     return add(val, 1);
 };
@@ -40,7 +40,8 @@ exports.add = function() {
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
 ``` javascript
-/******/ (function(modules) { // webpackBootstrap
+/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -69,46 +70,10 @@ exports.add = function() {
 /******/ 	}
 /******/
 /******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 ```
@@ -122,11 +87,13 @@ exports.add = function() {
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! runtime requirements: __webpack_require__ */
+/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
-var inc = __webpack_require__(/*! ./increment */ 1).increment;
-var a = 1;
+const inc = __webpack_require__(/*! ./increment */ 1).increment;
+const a = 1;
 inc(a); // 2
+
 
 /***/ }),
 /* 1 */
@@ -134,12 +101,14 @@ inc(a); // 2
   !*** ./increment.js ***!
   \**********************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! runtime requirements: __webpack_require__, __webpack_exports__ */
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
 
-var add = __webpack_require__(/*! ./math */ 2).add;
+const add = __webpack_require__(/*! ./math */ 2).add;
 exports.increment = function(val) {
     return add(val, 1);
 };
+
 
 /***/ }),
 /* 2 */
@@ -147,7 +116,8 @@ exports.increment = function(val) {
   !*** ./math.js ***!
   \*****************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/*! runtime requirements: __webpack_exports__ */
+/***/ (function(__unusedmodule, exports) {
 
 exports.add = function() {
     var sum = 0, i = 0, args = arguments, l = args.length;
@@ -167,34 +137,37 @@ exports.add = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 5.0.0-next
     Asset      Size  Chunks             Chunk Names
-output.js  3.44 KiB       0  [emitted]  main
+output.js  2.21 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 329 bytes [entry] [rendered]
+chunk {0} output.js (main) 326 bytes [entry] [rendered]
     > .\example.js main
-    [0] ./example.js 69 bytes {0} [built]
-        single entry .\example.js  main
-    [1] ./increment.js 98 bytes {0} [built]
-        cjs require ./increment [0] ./example.js 1:10-32
-    [2] ./math.js 162 bytes {0} [built]
-        cjs require ./math [1] ./increment.js 1:10-27
+ [0] ./example.js 72 bytes {0} [built]
+     [used exports unknown]
+     entry .\example.js main
+ [1] ./increment.js 98 bytes {0} [built]
+     [used exports unknown]
+     cjs require ./increment [0] ./example.js 1:12-34
+ [2] ./math.js 156 bytes {0} [built]
+     [used exports unknown]
+     cjs require ./math [1] ./increment.js 1:12-29
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 5.0.0-next
     Asset       Size  Chunks             Chunk Names
-output.js  740 bytes       0  [emitted]  main
+output.js  407 bytes   {404}  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 329 bytes [entry] [rendered]
+chunk {404} output.js (main) 326 bytes [entry] [rendered]
     > .\example.js main
-    [0] ./math.js 162 bytes {0} [built]
-        cjs require ./math [1] ./increment.js 1:10-27
-    [1] ./increment.js 98 bytes {0} [built]
-        cjs require ./increment [2] ./example.js 1:10-32
-    [2] ./example.js 69 bytes {0} [built]
-        single entry .\example.js  main
+ [275] ./example.js 72 bytes {404} [built]
+       entry .\example.js main
+ [529] ./increment.js 98 bytes {404} [built]
+       cjs require ./increment [275] ./example.js 1:12-34
+ [702] ./math.js 156 bytes {404} [built]
+       cjs require ./math [529] ./increment.js 1:12-29
 ```
